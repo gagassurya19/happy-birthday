@@ -45,6 +45,77 @@ const ensureDesktopAccess = () => {
   }
 };
 
+let musicInitialized = false;
+
+// Background music autoplay with toggle control
+const initMusicPlayer = () => {
+  if (musicInitialized) return;
+  const audio = document.getElementById("birthday-audio");
+  const toggleBtn = document.getElementById("music-toggle");
+  if (!audio || !toggleBtn) return;
+  musicInitialized = true;
+
+  const iconEl = toggleBtn.querySelector(".music-control__icon");
+  const labelEl = toggleBtn.querySelector(".music-control__label");
+
+  const updateToggleState = () => {
+    const playing = !audio.paused && !audio.muted;
+    toggleBtn.setAttribute("aria-pressed", playing ? "true" : "false");
+    if (labelEl) labelEl.textContent = playing ? "Mute" : "Play";
+    if (iconEl) iconEl.textContent = playing ? "🔊" : "🔈";
+  };
+
+  const resumeOnInteraction = () => {
+    audio.muted = false;
+    audio
+      .play()
+      .then(updateToggleState)
+      .catch(() => {
+        audio.muted = true;
+        updateToggleState();
+      });
+    ["click", "touchstart", "keydown"].forEach(evt =>
+      document.removeEventListener(evt, resumeOnInteraction)
+    );
+  };
+
+  const attemptAutoPlay = () => {
+    audio.volume = 0.6;
+    audio.muted = false;
+    audio
+      .play()
+      .then(updateToggleState)
+      .catch(() => {
+        // Autoplay blocked, wait for user interaction
+        audio.muted = true;
+        updateToggleState();
+        ["click", "touchstart", "keydown"].forEach(evt =>
+          document.addEventListener(evt, resumeOnInteraction, { once: true })
+        );
+      });
+  };
+
+  toggleBtn.addEventListener("click", () => {
+    if (audio.muted || audio.paused) {
+      audio.muted = false;
+      audio
+        .play()
+        .then(updateToggleState)
+        .catch(() => {
+          audio.muted = true;
+          updateToggleState();
+        });
+    } else {
+      audio.muted = true;
+      audio.pause();
+      updateToggleState();
+    }
+  });
+
+  updateToggleState();
+  attemptAutoPlay();
+};
+
 // Animation Timeline
 const animationTimeline = () => {
   // Spit chars that needs to be animated individually
@@ -325,5 +396,7 @@ const animationTimeline = () => {
 
 // Run fetch and animation in sequence
 fetchData();
+document.addEventListener("DOMContentLoaded", initMusicPlayer);
 window.addEventListener("load", ensureDesktopAccess);
 window.addEventListener("resize", ensureDesktopAccess);
+window.addEventListener("load", initMusicPlayer);

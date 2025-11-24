@@ -7,6 +7,17 @@ body {
   font-family: "Work Sans", sans-serif;
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+}
+
 .desktop-blocker {
   position: fixed;
   inset: 0;
@@ -261,6 +272,36 @@ body {
 #replay {
   z-index: 3;
   cursor: pointer;
+}
+
+.music-control {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(3, 6, 23, 0.9);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.music-control:hover {
+  transform: translateY(-2px);
+  background: rgba(3, 6, 23, 1);
+}
+
+.music-control__icon {
+  font-size: 1.1rem;
 }
 
 /* Media Queries */
