@@ -24,6 +24,27 @@ const fetchData = () => {
     });
 };
 
+// Block non-desktop screens with an overlay
+const ensureDesktopAccess = () => {
+  const blocker = document.getElementById("desktop-blocker");
+  const container = document.querySelector(".container");
+  if (!blocker || !container) return;
+
+  const isMobileUA = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
+  const isDesktopWidth = window.innerWidth >= 900;
+  const allowAccess = isDesktopWidth && !isMobileUA;
+
+  if (allowAccess) {
+    blocker.classList.remove("show");
+    container.removeAttribute("aria-hidden");
+  } else {
+    blocker.classList.add("show");
+    container.setAttribute("aria-hidden", "true");
+  }
+};
+
 // Animation Timeline
 const animationTimeline = () => {
   // Spit chars that needs to be animated individually
@@ -209,7 +230,7 @@ const animationTimeline = () => {
       0.2
     )
     .from(
-      ".lydia-dp",
+      ".debby-dp",
       0.5,
       {
         scale: 3.5,
@@ -232,7 +253,7 @@ const animationTimeline = () => {
       {
         opacity: 0,
         y: -50,
-        // scale: 0.3,
+        scale: 0.3,
         rotation: 150,
         skewX: "30deg",
         ease: Elastic.easeOut.config(1, 0.5)
@@ -304,3 +325,5 @@ const animationTimeline = () => {
 
 // Run fetch and animation in sequence
 fetchData();
+window.addEventListener("load", ensureDesktopAccess);
+window.addEventListener("resize", ensureDesktopAccess);

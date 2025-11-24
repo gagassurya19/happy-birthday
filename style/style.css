@@ -7,6 +7,37 @@ body {
   font-family: "Work Sans", sans-serif;
 }
 
+.desktop-blocker {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgb(3, 6, 23);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.desktop-blocker.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.desktop-blocker__card {
+  max-width: 420px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 24px;
+  backdrop-filter: blur(6px);
+}
+
 .container {
   height: 100vh;
   width: 100vh;
@@ -109,7 +140,7 @@ body {
 }
 
 .idea-6 span {
-  font-size: 15rem;
+  font-size: 12rem;
 }
 
 .six {
@@ -235,25 +266,29 @@ body {
 /* Media Queries */
 @media screen and (max-height: 1000px) {
   .six .hat {
-    left: 40%;
+    left: 55%;
+    rotate: 30deg;
   }
 }
 
 @media screen and (max-height: 800px) {
   .six .hat {
-    left: 37%;
+    left: 50%;
+    rotate: 30deg;
   }
 }
 
 @media screen and (max-height: 700px) {
   .six .hat {
-    left: 32%;
+    left: 45%;
+    rotate: 30deg;
   }
 }
 
 @media screen and (max-height: 850px) and (max-width: 450px) {
   .six .hat {
-    left: 32%;
+    left: 45%;
+    rotate: 30deg;
   }
 }
 
