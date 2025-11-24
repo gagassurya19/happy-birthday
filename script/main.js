@@ -1,3 +1,7 @@
+let experienceStarted = false;
+let animationReady = false;
+let animationHasRun = false;
+
 // Import the data to customize and insert them into page
 const fetchData = () => {
   fetch("customize.json")
@@ -18,7 +22,8 @@ const fetchData = () => {
         // Check if the iteration is over
         // Run amimation if so
         if ( dataArr.length === dataArr.indexOf(customData) + 1 ) {
-          animationTimeline();
+          animationReady = true;
+          maybeStartAnimation();
         } 
       });
     });
@@ -114,6 +119,50 @@ const initMusicPlayer = () => {
 
   updateToggleState();
   attemptAutoPlay();
+};
+
+const maybeStartAnimation = () => {
+  if (experienceStarted && animationReady && !animationHasRun) {
+    animationHasRun = true;
+    animationTimeline();
+  }
+};
+
+const startExperience = () => {
+  if (experienceStarted) return;
+  experienceStarted = true;
+
+  const overlay = document.getElementById("start-overlay");
+  if (overlay) {
+    overlay.classList.remove("show");
+  }
+
+  document.removeEventListener("keydown", handleStartKey);
+  maybeStartAnimation();
+};
+
+const handleStartKey = event => {
+  const isSpace =
+    event.code === "Space" ||
+    event.key === " " ||
+    event.keyCode === 32;
+
+  if (isSpace) {
+    event.preventDefault();
+    startExperience();
+  }
+};
+
+const initStartOverlay = () => {
+  const overlay = document.getElementById("start-overlay");
+  if (!overlay) {
+    experienceStarted = true;
+    maybeStartAnimation();
+    return;
+  }
+
+  overlay.classList.add("show");
+  document.addEventListener("keydown", handleStartKey);
 };
 
 // Animation Timeline
@@ -397,6 +446,7 @@ const animationTimeline = () => {
 // Run fetch and animation in sequence
 fetchData();
 document.addEventListener("DOMContentLoaded", initMusicPlayer);
+document.addEventListener("DOMContentLoaded", initStartOverlay);
 window.addEventListener("load", ensureDesktopAccess);
 window.addEventListener("resize", ensureDesktopAccess);
 window.addEventListener("load", initMusicPlayer);
